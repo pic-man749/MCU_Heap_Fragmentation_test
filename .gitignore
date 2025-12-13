@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# for STM32CubeIDE project
+Debug/
+Release/
+.metadata/
+.settings/
