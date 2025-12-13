@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdint.h>
 
 /* USER CODE END Includes */
 
@@ -56,6 +57,75 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void run_fragmentation_test() {
+  printf("===== Running fragmentation test =====\r\n");
+
+  static size_t UNIT_SIZE = 1024;
+  static const size_t ARRAY_SIZE = 8;
+  uint32_t idx = 0;
+
+  uint8_t *memory[ARRAY_SIZE];
+
+  printf("  unit size = %i, array size = %i\r\n", UNIT_SIZE, ARRAY_SIZE);
+  printf("\r\n");
+
+  printf("malloc() memory[]\r\n");
+  for (size_t i = 0; i < ARRAY_SIZE; ++i)
+  {
+    memory[i] = malloc(UNIT_SIZE);
+    printf("  memory[%i] address = %p\r\n", i, memory[i]);
+  }
+  
+  printf("\r\n");
+
+  printf("free() memory[1], [3], [5], [6]\r\n");
+  free(memory[1]);
+  free(memory[3]);
+  free(memory[5]);
+  free(memory[6]);
+
+  printf("\r\n");
+
+  printf("malloc() halfUnitSize -> unitSize -> uintSizeX2\r\n");
+  uint8_t *bufHalfUS = malloc(UNIT_SIZE / 2);
+  uint8_t *bufUS = malloc(UNIT_SIZE);
+  uint8_t *bufUSx2 = malloc(UNIT_SIZE * 2);
+
+  printf("  halfUnitSize = %p\r\n", bufHalfUS);
+  printf("  unitSize     = %p\r\n", bufUS);
+  printf("  uintSizeX2   = %p\r\n", bufUSx2);
+
+  printf("\r\n");
+
+  printf("free() halfUnitSize, unitSize, uintSizeX2\r\n");
+  free(bufHalfUS);
+  free(bufUS);
+  free(bufUSx2);
+
+  printf("\r\n");
+
+  printf("malloc() uintSizeX2 -> unitSize -> halfUnitSize\r\n");
+  bufUSx2 = malloc(UNIT_SIZE * 2);
+  bufUS = malloc(UNIT_SIZE);
+  bufHalfUS = malloc(UNIT_SIZE / 2);
+
+  printf("  halfUnitSize = %p\r\n", bufHalfUS);
+  printf("  unitSize     = %p\r\n", bufUS);
+  printf("  uintSizeX2   = %p\r\n", bufUSx2);
+
+  printf("\r\n");
+
+  printf("free() ALL\r\n");
+  free(memory[0]);
+  free(memory[2]);
+  free(memory[4]);
+  free(memory[7]);
+  free(bufHalfUS);
+  free(bufUS);
+  free(bufUSx2);
+
+}
 
 /* USER CODE END 0 */
 
@@ -113,6 +183,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  run_fragmentation_test();
+
   while (1)
   {
 
