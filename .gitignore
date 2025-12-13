@@ -34,5 +34,6 @@
 # for STM32CubeIDE project
 Debug/
 Release/
+*.launch
 .metadata/
 .settings/
